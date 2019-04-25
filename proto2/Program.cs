@@ -136,7 +136,7 @@ namespace proto2
             root = InsertNode(root, value);
         }
 
-        // overide for desc order
+        // overide  desc order
         public void Insert(double value, bool desc)
         {
             root = InsertNode(root, value, desc);
@@ -221,40 +221,15 @@ namespace proto2
         #region bubble sort methods
         public static void BubbleSortAsc(double[] data)
         {
-            bool sorted = false;
+            int n = data.Length - 1;
 
-            while (!sorted)
+            for (int i = 0; i < n; i++)
             {
-                sorted = true;
-
-                for (int i = 0; i < data.Length - 1; i++)
+                for (int j = 0; j < n - i; j++)
                 {
-                    
-                    if (data[i + 1] < data[i])
+                    if (data[j + 1] < data[j])
                     {
-                        
-                        double temp = data[i];
-                        data[i] = data[i + 1];
-                        data[i + 1] = temp;
-                        sorted = false;
                         operations++;
-                    }
-                    Console.WriteLine(operations);
-                }
-                
-            }
-
-        }
-        private static void BubbleSort(double[] data)
-        {
-            int n = data.Length;
-            for (int i = 0; i < n - 1; i++)
-            {
-                for (int j = 0; j < n - 1 - i; j++)
-                {
-                    operations++;
-                    if (data[j + 1] > data[j])
-                    {
                         double temp = data[j];
                         data[j] = data[j + 1];
                         data[j + 1] = temp;
@@ -263,6 +238,28 @@ namespace proto2
                 Console.WriteLine(operations);
             }
         }
+
+        private static void BubbleSort(double[] data)
+        {
+            int n = data.Length;
+            for (int i = 0; i < n - 1; i++)
+            {
+                for (int j = 0; j < n - 1 - i; j++)
+                {
+                    
+                    if (data[j + 1] > data[j])
+                    {
+                        operations++;
+                        double temp = data[j];
+                        data[j] = data[j + 1];
+                        data[j + 1] = temp;
+                    }
+                }
+                Console.WriteLine(operations);
+            }
+        }
+
+        
         #endregion
 
         #region quick sort methods
@@ -345,18 +342,17 @@ namespace proto2
         {
             int numSorted = 1;
             int i;
-
             while (numSorted < data.Length)
             {
                 double temp = data[numSorted];
                 for (i = numSorted; i > 0; i--)
                 {
-                    operations++;
+                    
                     if (temp > data[i - 1]) // flip for inverse
                     {
                         data[i] = data[i - 1];
-                        
-                        
+
+                        operations++;
                     }
                     else
                     {
@@ -415,8 +411,18 @@ namespace proto2
             // builds mirror bst using overload value.
             else
                 for (int i = 0; i < data.Length; i++)
+                {
                     bst.Insert(data[i], asc);
-            Console.WriteLine("swaps: {0}", operations);
+                    Console.WriteLine(operations);
+                }
+                    
+            if (data.Length <= 256)
+                bst.InOrder(bst.root, 0, 10);
+            else if (data.Length <= 2048)
+                bst.InOrder(bst.root, 0, 50);
+            else
+                bst.InOrder(bst.root, 0, 80);
+            Console.WriteLine("\nswaps: {0}", operations);
             Console.WriteLine("comparisions: {0}", comparisons);
             // value to locate.
             double target;
@@ -441,12 +447,7 @@ namespace proto2
             Console.WriteLine("Closest value: {0} found. BST level: {1} holds this value.", dataItem, dataItemLevel);
             Console.WriteLine("Green for right nodes, Red for left nodes, White for root.\nLevel {0}: ", dataItemLevel);
             bst.PrintLevel(bst.root, dataItemLevel);
-            if(data.Length <= 256)
-                bst.InOrder(bst.root, 0, 10);
-            else if (data.Length <= 2048)
-                bst.InOrder(bst.root, 0, 50);
-            else
-                bst.InOrder(bst.root, 0, 80);
+            
             Console.ReadKey();
         }
 
