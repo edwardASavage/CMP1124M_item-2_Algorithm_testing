@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace proto2
+namespace AlgAssFinal
 {
     #region BST util classes and methods
     class BinaryNode
@@ -85,7 +85,6 @@ namespace proto2
 
         private BinaryNode InsertNode(BinaryNode root, double value)
         {
-            Program.comparisons++;
             if (root == null)
             {
                 root = new BinaryNode(value);
@@ -94,12 +93,10 @@ namespace proto2
             {
                 if (root.dataItem > value)
                 {
-                    Program.operations++;
                     root.left = InsertNode(root.left, value);
                 }
                 else
                 {
-                    Program.operations++;
                     root.right = InsertNode(root.right, value);
                 }
             }
@@ -108,7 +105,6 @@ namespace proto2
         // mirror insert desc
         private BinaryNode InsertNode(BinaryNode root, double value, bool desc)
         {
-            Program.comparisons++;
             if (root == null)
             {
                 root = new BinaryNode(value);
@@ -117,13 +113,11 @@ namespace proto2
             {
                 if (root.dataItem < value)
                 {
-                    Program.operations++;
                     root.left = InsertNode(root.left, value, desc);
 
                 }
                 else
                 {
-                    Program.operations++;
                     root.right = InsertNode(root.right, value, desc);
                 }
             }
@@ -164,13 +158,13 @@ namespace proto2
         {
             if (root.left != null && data < root.dataItem)
             {
-                double rightRes = FindClosestVal(root.right, data);
+                double rightRes = FindClosestVal(root.right, data, asc);
                 return Math.Abs(rightRes - data) < Math.Abs(root.dataItem - data) ? rightRes : root.dataItem;
                
             }
             if (root.right != null && data > root.dataItem)
             {
-                double leftRes = FindClosestVal(root.left, data);
+                double leftRes = FindClosestVal(root.left, data, asc);
                 return Math.Abs(leftRes - data) < Math.Abs(root.dataItem - data) ? leftRes : root.dataItem;
             }
             return root.dataItem;
@@ -199,8 +193,6 @@ namespace proto2
     class Program
     {
         // for counting purposes.
-        public static int operations = 0;
-        public static int comparisons = 0;
         // Converts the txt file into a double array dataset.
         #region text to data conversion
         private static double[] TxtToData(string path)
@@ -219,23 +211,23 @@ namespace proto2
         #endregion
         // Sorting algorithms for asc and desc order.
         #region bubble sort methods
+       
+
         public static void BubbleSortAsc(double[] data)
         {
             int n = data.Length - 1;
 
             for (int i = 0; i < n; i++)
             {
-                for (int j = 0; j < n - i; j++)
+                for (int j = 0; j < n - i - 1; j++)
                 {
                     if (data[j + 1] < data[j])
                     {
-                        operations++;
                         double temp = data[j];
                         data[j] = data[j + 1];
                         data[j + 1] = temp;
                     }
-                }
-                Console.WriteLine(operations);
+                }   
             }
         }
 
@@ -249,20 +241,18 @@ namespace proto2
                     
                     if (data[j + 1] > data[j])
                     {
-                        operations++;
                         double temp = data[j];
                         data[j] = data[j + 1];
                         data[j + 1] = temp;
                     }
                 }
-                Console.WriteLine(operations);
             }
         }
-
-        
         #endregion
 
         #region quick sort methods
+
+
 
         public static void QuickSortAsc(double[] data, int left, int right)
         {
@@ -288,16 +278,16 @@ namespace proto2
                     data[j] = temp;
                     i++;
                     j--;
-                    operations++;
                 }
             } while (i <= j);
-            Console.WriteLine(operations);
+            
 
             if (left < j)
                 QuickSortAsc(data, left, j);
 
             if (i < right)
                 QuickSortAsc(data, i, right);
+           
         }
         //dec
         public static void QuickSort(double[] data, int left, int right)
@@ -324,10 +314,8 @@ namespace proto2
                     data[j] = temp;
                     i++;
                     j--;
-                    operations++;
                 }
             } while (i <= j);
-            Console.WriteLine(operations);
 
             if (left < j)
                 QuickSort(data, left, j);
@@ -345,25 +333,13 @@ namespace proto2
             while (numSorted < data.Length)
             {
                 double temp = data[numSorted];
-                for (i = numSorted; i > 0; i--)
-                {
-                    
+                for (i = numSorted; i > 0; i--)  
                     if (temp > data[i - 1]) // flip for inverse
-                    {
                         data[i] = data[i - 1];
 
-                        operations++;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                    
-                }
+                    else break;
                 data[i] = temp;
-
                 numSorted++;
-                Console.WriteLine(operations);
             }
         }
         public static void InsertionSort(double[] data)
@@ -376,20 +352,14 @@ namespace proto2
                 double temp = data[numSorted];
                 for (i = numSorted; i > 0; i--)
                 {
-                    operations++;
+                   
                     if (temp > data[i - 1]) // flip for inverse ... curr desc
-                    {
                         data[i] = data[i - 1];
-                    }
                     else
-                    {
                         break;
-                    }
                 }
                 data[i] = temp;
-
                 numSorted++;
-                Console.WriteLine(operations);
             }
         }
         #endregion
@@ -403,18 +373,12 @@ namespace proto2
             // builds bst with unsorted data.
             if (asc == true)
                 for (int i = 0; i < data.Length; i++)
-                {
                     bst.Insert(data[i]);
-                    Console.WriteLine(operations);
-                }
                     
             // builds mirror bst using overload value.
             else
                 for (int i = 0; i < data.Length; i++)
-                {
                     bst.Insert(data[i], asc);
-                    Console.WriteLine(operations);
-                }
                     
             if (data.Length <= 256)
                 bst.InOrder(bst.root, 0, 10);
@@ -422,8 +386,6 @@ namespace proto2
                 bst.InOrder(bst.root, 0, 50);
             else
                 bst.InOrder(bst.root, 0, 80);
-            Console.WriteLine("\nswaps: {0}", operations);
-            Console.WriteLine("comparisions: {0}", comparisons);
             // value to locate.
             double target;
             Console.WriteLine("\nPlease input a numeric double value to locate: ");
@@ -453,8 +415,31 @@ namespace proto2
 
         #endregion
         // Binary search method
-        #region searching method
-        private static void BinarySearchClosest(double[] data)
+        #region searching methods
+        private static void SortChoice(double[] data, bool asc)
+        {
+            
+            int input;
+            Console.WriteLine("1) for Binary search \n2) for Linear search");
+            while (!int.TryParse(Console.ReadLine(), out input))
+            {
+                Console.WriteLine("Invalid Input. \n s1) for Binary search\b2) for Linear search");
+                continue;
+            }
+            Console.Clear();
+            if (input == 1)
+                if (asc == true)
+                    BinarySearchClosestAsc(data);
+                else
+                    BinarySearchClosest(data);
+            else
+                if (asc == true)
+                    LinearSearchClosestAsc(data);
+                else
+                    LinearSearchClosest(data);            
+            
+        }
+        private static void BinarySearchClosestAsc(double[] data)
         {
             double target;
             Console.WriteLine("Please input a numeric double value to search for: ");
@@ -472,19 +457,187 @@ namespace proto2
             {
                 mid = left + (right - left) / 2;
                 if (target > (data[mid]))
+                    // go forward
                     left = mid + 1;
                 else
-                    // if target is higher
+                    // go back
                     right = mid - 1;
 
                 if (data[mid] == target)
-                {
                     Console.WriteLine("exact value matched.");
-                    break;
+            } while (left <= right);
+
+            if (data[mid] != target && mid!= 0)
+            {
+                if (Math.Abs(target - data[mid - 1]) < Math.Abs(target - data[mid]))
+                    Console.WriteLine("LOWER MATCH {0}", data[mid-1]);
+                else if (Math.Abs(target - data[mid - 1]) > Math.Abs(target - data[mid]))
+                    Console.WriteLine("HIGHER MATCH {0}", data[mid ]);
+                else
+                    Console.WriteLine("TWO MATCHES: {0} , {1}", data[mid - 1], data[mid]);
+            }
+
+
+        }
+
+        private static void BinarySearchClosest(double[] data)
+        {
+            double target;
+            Console.WriteLine("Please input a numeric double value to search for: ");
+            // input validation.
+            while (!double.TryParse(Console.ReadLine(), out target))
+            {
+                Console.WriteLine("Invalid input. Numeric double values only, please retry: ");
+                continue;
+            }
+            int left = 0;
+            int right = data.Length - 1;
+            int mid = 0;
+            int operations = 0;
+            // non recursive
+            do
+            {
+                mid = left + (right - left) / 2;
+                Console.WriteLine("mid element is {0}", data[mid]);
+                operations++;
+                // move mid over by one index.
+                if (target < data[mid])
+                {
+                    left = mid + 1;
+                }
+                else
+                {
+                    // look backward
+                    
+                    right = mid - 1;
+                }
+                    
+                if (data[mid] == target)
+                {
+                    Console.WriteLine("exact value matched at. {0}", data[mid]);
                 }
             } while (left <= right);
-            Console.WriteLine("Value {0} is at element: {1}", data[mid], mid);
+            Console.WriteLine(operations);
+            if (data[mid] != target)
+            {
+                if (Math.Abs(target - data[mid - 1]) > Math.Abs(data[mid] - target))
+                {
+                    Console.WriteLine("HIGHER MATCH {0}", data[mid]);
+                }
+                else if (Math.Abs(target - data[mid - 1]) < Math.Abs(data[mid] - target))
+                {
+                    Console.WriteLine("LOWER MATCH {0}", data[mid - 1]);
+                }
+                else
+                {
+                    Console.WriteLine("TWO MATCHES: {0} , {1}", data[mid - 1], data[mid]);
+                }
+            }
+
+
         }
+
+        private static void LinearSearchClosestAsc(double[] data)
+        {
+            double target;
+            Console.WriteLine("Please input a numeric double value to search for: ");
+            // input validation.
+            while (!double.TryParse(Console.ReadLine(), out target))
+            {
+                Console.WriteLine("Invalid input. Numeric double values only, please retry: ");
+                continue;
+            }
+
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                if (data[i] == target)
+                {
+                    Console.WriteLine("EXACT MATCH FOR {0} at element {1}", target, i);
+                    break;
+                }
+
+                if (data[i] > target && i != 0)
+                { 
+                    if (Math.Abs(target - data[i - 1]) > Math.Abs(target - data[i]))
+                    {
+                       
+                        Console.WriteLine("element: {0} provides HIGHER value: {1} as closest match.", i, data[i]);
+                        break;
+                    }
+                    else if (Math.Abs(target - data[i - 1]) < Math.Abs(target - data[i]))
+                    {
+                        Console.WriteLine("element: {0} provides LOWER value: {1} as closest match.", i, data[i - 1]);
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Two EQUAL closest matches found:\n{0} at element: {1}.\nAnd{2} at element: {3}.", data[i - 1], i-1, data[i], i);
+                        break;
+                    }
+                }
+                else if (i <= 0)
+                {
+                    Console.WriteLine("Value searched was lower than the initial value in this data set. element 0 is: {0}", data[0]);
+                    break;
+                }
+            }
+        }
+
+        private static void LinearSearchClosest(double[] data)
+        {
+            double target;
+            Console.WriteLine("Please input a numeric double value to search for: ");
+            // input validation.
+            while (!double.TryParse(Console.ReadLine(), out target))
+            {
+                Console.WriteLine("Invalid input. Numeric double values only, please retry: ");
+                continue;
+            }
+            int operations = 0;
+
+
+            for (int i = 0; i < data.Length; i++)
+            {
+
+                
+                operations++;
+                if (data[i] == target)
+                {
+                    Console.WriteLine("EXACT MATCH FOR {0} at element {1}", target, i);
+                    break;
+                }
+
+
+                if (data[i] < target && i!= 0)
+                {
+                    if (Math.Abs(target - data[i - 1]) < Math.Abs(target - data[i]))
+                    {
+
+                        Console.WriteLine("element: {0} provides HIGHER value: {1} as closest match.", i, data[i]);
+                        break;
+                    }
+                    else if (Math.Abs(target - data[i - 1]) > Math.Abs(target - data[i]))
+                    {
+                        Console.WriteLine("element: {0} provides LOWER value: {1} as closest match.", i, data[i - 1]);
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Two EQUAL closest matches found:\n{0} at element: {1}.\nAnd{2} at element: {3}.", data[i - 1], i - 1, data[i], i);
+                        break;
+                    }
+                }
+                else if(i < 0)
+                {
+                    Console.WriteLine("Value searched was lower than the initial value in this data set. element 0 is: {0}", data[0]);
+                    break;
+                }
+                
+            }
+            Console.WriteLine(operations);
+        }
+        
         #endregion
 
         // Util methods for choosing, merging and displaying arrays of non BST type.
@@ -574,7 +727,7 @@ namespace proto2
                     }
                     break;
 
-                case int n when (n <= 2048 && n >256):
+                case int n when (n <= 2048 && n > 256):
                     Console.WriteLine("\nPrinting every: 50 iterations\n");
                     for (int i = 0; i < arr.Length; i++)
                     {
@@ -594,8 +747,6 @@ namespace proto2
                     }
                     break;
             }
-            Console.WriteLine("swaps: {0}", operations);
-            Console.WriteLine("comparisions: {0}", comparisons);
         }
         #endregion
 
@@ -632,7 +783,8 @@ namespace proto2
                     else // desc
                         BubbleSort(data);
                     PrintArr(data);
-                    BinarySearchClosest(data);
+                    SortChoice(data, asc);
+
                     break;
 
                 case 2:
@@ -641,7 +793,7 @@ namespace proto2
                     else
                         InsertionSort(data);
                     PrintArr(data);
-                    BinarySearchClosest(data);
+                    SortChoice(data, asc);
                     break;
 
                 case 3:
@@ -650,12 +802,11 @@ namespace proto2
                     else
                         QuickSort(data, 0, data.Length - 1);
                     PrintArr(data);
-
-                    BinarySearchClosest(data);
+                    SortChoice(data, asc);
+                    //BinarySearchClosest(data);
                     break;
                 default:
                     Bst(data, asc);
-
                     break;
             } // Perform sorting
         }

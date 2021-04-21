@@ -1,0 +1,7 @@
+C:\Users\Edward\Downloads\algComplexAss\proto2\proto2\bin\Debug\proto2.exe.config
+C:\Users\Edward\Downloads\algComplexAss\proto2\proto2\bin\Debug\proto2.exe
+C:\Users\Edward\Downloads\algComplexAss\proto2\proto2\bin\Debug\proto2.pdb
+C:\Users\Edward\Downloads\algComplexAss\proto2\proto2\obj\Debug\AlgAssFinal.csprojAssemblyReference.cache
+C:\Users\Edward\Downloads\algComplexAss\proto2\proto2\obj\Debug\AlgAssFinal.csproj.CoreCompileInputs.cache
+C:\Users\Edward\Downloads\algComplexAss\proto2\proto2\obj\Debug\proto2.exe
+C:\Users\Edward\Downloads\algComplexAss\proto2\proto2\obj\Debug\proto2.pdb
